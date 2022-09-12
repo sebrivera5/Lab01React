@@ -1,5 +1,6 @@
 
 var firebase = require('firebase/app')
+
 const { getDatabase, ref, onValue, set, update, get, child } = require('firebase/database'); 
 
 
@@ -40,10 +41,11 @@ get(child(dbRef,"CurrentTemp/")).then((snapshot) => {
 });*/
 
 //Refresh page after getting onValue
-function refresh(){
-    window.location.reload();
-    console.log("Refreshing!!!!")
-}
+function updateChart(){
+// This is the element that will display graph data.
+           
+        
+}    
 
 //Push adds element to end of array
 var graphArr = new Array (300);
@@ -59,6 +61,7 @@ const currTempRef = ref(database, 'CurrentTemp');
 onValue(currTempRef, (snapshot) => {
 const currTemp = snapshot.val();
 temp = currTemp
+document.getElementById("chartJSScript").innerHTML = 3
 document.getElementById("test").innerHTML = "Current Temperature = " + currTemp + "°C";
 //If device becomes unbplugged
 if (currTemp == null){
@@ -70,4 +73,6 @@ console.log(currTemp);
 //updateStarCount(postElement, data);
 });
 
+
+//Text
 
