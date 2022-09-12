@@ -19,11 +19,6 @@
     
 
 
-    <body>
-        <button onclick="revealMessage()">Test!</button>
-        <p  id="hiddenMessage" style="display:none"> you are going on poop</p>
-    </body>
-
     <!--     This script: -->
 <!--     - runs in the background listening to changes -->
     
@@ -52,16 +47,22 @@
 
   //             This data allows us to display that data can have gaps in it
   //             as well as view what the graph will look like with real data.
+  //             Initial Values at 0 for now.
               let dummyTemperatureData = [];
               for(let i = 0; i <= 300; i++) {
-                if(i < 50) {
+                dummyTemperatureData[i] =10;
+                dummyTemperatureData[300] = currTemp
+                //dummyTemperatureData[100] = 300
+                /*if(i < 50) {
                   dummyTemperatureData[i] = 22 + i%20;
                 } else if(i >= 50 && i < 100) {
                   dummyTemperatureData[i] = 120-i;
                 } else if(i > 200 && i < 270) {
                   dummyTemperatureData[i] = 26;
-                }
+                }*/
               }
+
+
 
   //           These are the parameters for the graph
             const temperatureChart = new Chart(ctx, {
@@ -93,7 +94,14 @@
               }
             })
 
+
+
+          
+           
+        
             })
+
+            
           </script>
     
     
@@ -189,7 +197,12 @@
 
               <div id="submitButton" class="my-5">
                 <label for="graphMinTemp" class="form-label"><b>Push Changes</b></label>
-                <button onclick="">Test!</button>
+                <button type="submitButton" onclick="test()">Submit!</button>
+                <script>function test() {
+                  alert("test");
+                  }
+                </script>
+                
               </div>
               
             </form>
