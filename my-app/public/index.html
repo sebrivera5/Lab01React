@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Online Temperature Sensor</title>
+    
+
+
+
+    <!--BOOTSTRAP CDN IMPORTS-->
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<!--     JQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" crossorigin="anonymous"></script>
+    
+
+
+    <body>
+        <button onclick="revealMessage()">Test!</button>
+        <p  id="hiddenMessage" style="display:none"> you are going on poop</p>
+    </body>
+
+    <!--     This script: -->
+<!--     - runs in the background listening to changes -->
+    
+    <script src="scripts/scripts.js"></script>  
+
+<!--     This script: -->
+<!--     - generates arbitrary graph data -->
+<!--     - configures the parameters for the chart.js graph -->
+<!--     - displays the generated data on the graph -->
+    <script id="chartJSScript">
+            
+            // This is the element that will display graph data.
+            let ctx = null;
+            $(document).ready(function() {
+                ctx = $("#temperatureGraph").get(0).getContext('2d');
+
+              // const ctx = document.getElementById('temperatureGraph').getContext('2d');
+
+
+  //             These labels are 'seconds ago' for the temperature graph.
+              const temperatureLabels = [];
+              for(let i = 0; i <= 300; i++) {
+                temperatureLabels[i] = 300-i;
+              }
+
+
+  //             This data allows us to display that data can have gaps in it
+  //             as well as view what the graph will look like with real data.
+              let dummyTemperatureData = [];
+              for(let i = 0; i <= 300; i++) {
+                if(i < 50) {
+                  dummyTemperatureData[i] = 22 + i%20;
+                } else if(i >= 50 && i < 100) {
+                  dummyTemperatureData[i] = 120-i;
+                } else if(i > 200 && i < 270) {
+                  dummyTemperatureData[i] = 26;
+                }
+              }
+
+  //           These are the parameters for the graph
+            const temperatureChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: temperatureLabels,
+                datasets: [{
+                  label: 'Temperature Data',
+                  data: dummyTemperatureData,
+                  fill: false,
+                  borderColor: 'rgb(100,200,100)',
+                  tension: 0.1
+                }]
+              },
+              options: {
+                scales: {
+                  y: {
+                    min: 10,
+                    max: 50,
+                    // FALSE if new datapoints in database go into the 0 slot.
+                    // TRUE if new datapoints in database go into the 300 slot.
+                    reverse: false,
+                    text: "Degrees C",
+                  },
+                  x: {
+                    text: "Seconds Ago"
+                  }
+                }
+              }
+            })
+
+            })
+          </script>
+    
+    
+<!--     This script does stuff with the data in the form. -->
+<!--     *NOTE* this might not be the place to put this, might be something for server.js -->
+    <script id="FormHandling">
+      let phoneNumber = "5551823";
+      let highTemperatureMessage = "The temperature has exceeded the maximum threshold!";
+      let lowTemperatureMessage = "The temperature has dropped below the minimum threshold!";
+      let graphMaxTemperature = "50";
+      let graphMinTemperature = "10";
+      
+      
+      
+      $(document).ready(function() {
+        
+        $("#phoneNumberInput").change(function() {
+//           input validation:
+          
+          
+          phoneNumber = newInput;
+        })
+         
+        $("#highTemperatureMsgInput").change(function() {
+           console.log("2 changed")
+        })
+         
+        $("#lowTemperatureMsgInput").change(function() {
+          console.log("3 changed")
+        })
+         
+        $("#graphMaxTemp").change(function() {
+          console.log("4 changed")
+        })
+         
+        $("#graphMinTemp").change(function() {
+          console.log("5 changed")
+        })
+         
+      })
+      
+    </script>
+    
+  </head>
+  <body>
+    <div class="container text-center">
+<!--       Title bar -->
+      <div class="row">
+        <h1>Online Temperature Sensor</h1>
+      </div>
+      <hr>
+<!--       Graph and text alert form -->
+      <div class="row">
+<!--         Graph -->
+        <div class="col-9" style="z-index: 1000">
+          <div class="card" style="resize: horizontal; overflow: auto;">
+            <div class="card-body">
+              <canvas id="temperatureGraph" width="100%" height="100%" style="resize: both; overflow: auto;"></canvas>
+            </div>
+          </div>
+        </div>
+<!--         text alert form -->
+        <div class="col-3">
+          <div class="card px-3 py-3">
+            <form id="textAlertForm">
+              
+              <title></title>
+              
+              <div id="phoneNumberConfig" class="my-5">
+                <label for="phoneNumberInput" class="form-label"><b>Phone Number For Alerts</b></label>
+                <input id="phoneNumberInput" type="tel" class="form-control">
+              </div>
+              
+              <div id="highTemperatureMsgConfig" class="my-5">
+                <label for="highTemperatureMsgInput" class="form-label"><b>Message When Temperature Exceeds Max Threshold</b></label>
+                <input id="highTemperatureMsgInput" type="text" class="form-control">
+              </div>
+              
+              <div id="lowTemperatureMsgConfig" class="my-5">
+                <label for="lowTemperatureMsgInput" class="form-label"><b>Message When Temperature Drops Below Min Threshold</b></label>
+                <input id="lowTemperatureMsgInput" type="text" class="form-control">
+              </div>
+              
+              <div id="graphMaxTempConfig" class="my-5">
+                <label for="graphMaxTemp" class="form-label"><b>Max Temperature Threshold</b></label>
+                <input id="graphMaxTemp" type="number" class="form-control" value="50">
+              </div>
+              
+              <div id="graphMinTempConfig" class="my-5">
+                <label for="graphMinTemp" class="form-label"><b>Min Temperature Threshold</b></label>
+                <input id="graphMinTemp" type="number" class="form-control" value="10">
+              </div>
+
+              <div id="submitButton" class="my-5">
+                <label for="graphMinTemp" class="form-label"><b>Push Changes</b></label>
+                <button onclick="">Test!</button>
+              </div>
+              
+            </form>
+          </div>
+        </div>
+        </div>
+      </div>
+      <hr>
+<!--       Temperature display / footer -->
+      <div class="row">
+        <div class="col">
+          <h1 class="display-6 text-center" id="test">
+            Current Temperature: [Over 9000 ºC]
+          </h1>
+        </div>
+      </div>
+  </body>
+</html>
